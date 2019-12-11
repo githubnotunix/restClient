@@ -1,10 +1,12 @@
 package com.example.restclient;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,6 +55,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postId = (TextView) itemView.findViewById(R.id.post_id);
             postTitle = (TextView) itemView.findViewById(R.id.post_title);
             postBody = (TextView) itemView.findViewById(R.id.post_body);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context.getApplicationContext(), "Recycler View Clicked", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(v.getContext(), UserActivity.class);
+                    intent.putExtra("userId", posts.get(getAdapterPosition()).getUserId());
+                    intent.putExtra("title", posts.get(getAdapterPosition()).getTitle());
+                    intent.putExtra("body", posts.get(getAdapterPosition()).getText());
+                    v.getContext().startActivity(intent);
+                }
+            });
 
         }
     }
