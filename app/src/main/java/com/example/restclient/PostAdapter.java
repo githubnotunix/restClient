@@ -2,6 +2,7 @@ package com.example.restclient;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +35,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull PostAdapter.ViewHolder holder, int position) {
-        holder.postId.setText(String.valueOf("ID: " + posts.get(position).getId()));
-        holder.postUserId.setText(String.valueOf("User ID: " + posts.get(position).getUserId()));
-        holder.postTitle.setText("Title:" + posts.get(position).getTitle());
-        holder.postBody.setText("Body " + posts.get(position).getText() + "\n");
 
+        holder.postId.setText(String.valueOf("ID: " + posts.get(position).getId()));
+       // holder.postUserId.setText(String.valueOf("User ID: " + posts.get(position).getUserId()));
+        holder.postTitle.setText("Title:" + posts.get(position).getTitle());
+        //holder.postBody.setText("Body " + posts.get(position).getText() + "\n");
+        // This is in a try catch whenever the posts initially loads without the user data
+        try {
+            holder.postUserName.setText(posts.get(position).getUser().getUsername());
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
     }
 
     @Override
@@ -46,15 +53,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         return posts.size();
     }
 
+    // Pass position of post to update and object to update with
+    public void updateBlogPost(int position, Post newPost) {
+        // This will update the post with the 'new' post (it has a user object now)
+        posts.set(position, newPost);
+        // This will update the recycler view with the new data
+        notifyItemChanged(position);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView postUserId, postId, postTitle, postBody;
+        private TextView postUserId, postUserName, postId, postTitle, postBody;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            postUserId = (TextView) itemView.findViewById(R.id.post_userid);
+            //postUserId = (TextView) itemView.findViewById(R.id.post_userID);
             postId = (TextView) itemView.findViewById(R.id.post_id);
             postTitle = (TextView) itemView.findViewById(R.id.post_title);
             postBody = (TextView) itemView.findViewById(R.id.post_body);
+            postUserName = (TextView) itemView.findViewById(R.id.username);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -63,6 +80,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     intent.putExtra("userId", posts.get(getAdapterPosition()).getUserId());
                     intent.putExtra("title", posts.get(getAdapterPosition()).getTitle());
                     intent.putExtra("body", posts.get(getAdapterPosition()).getText());
+
+                    try {
+                        intent.putExtra("user", posts.get(getAdapterPosition()).getUser());
+                    } catch (Exception err) {
+                        err.printStackTrace();
+                    }
                     v.getContext().startActivity(intent);
                 }
             });

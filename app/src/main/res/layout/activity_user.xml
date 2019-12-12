@@ -10,7 +10,10 @@
         android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="adyedfadfdaf" />
+        android:text="adyedfadfdaf"
+        android:textSize="20sp"
+        android:textColor="@android:color/holo_purple"
+        android:textStyle="bold"/>
     <TextView
         android:id="@+id/user_title"
         android:layout_width="match_parent"
@@ -23,6 +26,12 @@
         android:layout_height="wrap_content"
         android:text="adyedfadfdaf"
         android:layout_below="@+id/user_title"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/comment_recview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/user_body"/>
 
     <!--<androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

@@ -10,6 +10,8 @@ public class Post {
 
     private String title;
 
+    private User user;
+
     @SerializedName("body")
     private String text;
 
@@ -27,5 +29,13 @@ public class Post {
 
     public String getText() {
         return text;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
