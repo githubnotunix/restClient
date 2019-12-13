@@ -2,4 +2,5 @@
     <string name="app_name">restclient</string>
     <string name="title_activity_user">UserActivity</string>
     <string name="title_activity_user_view">UserViewActivity</string>
+    <string name="title_activity_create_comment">CreateComment</string>
 </resources>

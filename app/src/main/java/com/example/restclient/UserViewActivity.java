@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -54,6 +55,7 @@ public class UserViewActivity extends FragmentActivity implements OnMapReadyCall
         website = (TextView) findViewById(R.id.userswebsite);
         precyclerView = (RecyclerView) findViewById(R.id.user_post_recview);
         precyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         //Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);

@@ -43,6 +43,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         //holder.postBody.setText("Body " + posts.get(position).getText() + "\n");
 
     }
+    public void addComment(Comment comment){
+        comments.add(0, comment);
+        notifyItemChanged(0);
+    }
 
     @Override
     public int getItemCount() {

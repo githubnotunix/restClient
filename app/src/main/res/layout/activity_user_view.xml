@@ -36,11 +36,21 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/usersphone"/>
 
+    <!--<Button
+        android:id="@+id/post_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Comment"
+        android:layout_below="@+id/userswebsite"
+        android:layout_alignRight="@id/map_fragment"/>-->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_post_recview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_below="@+id/userswebsite" />
+        android:layout_below="@+id/userswebsite" >
+
+    </androidx.recyclerview.widget.RecyclerView>
     <fragment
         android:id="@+id/map_fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"

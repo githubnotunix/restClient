@@ -26,6 +26,13 @@
         android:layout_height="wrap_content"
         android:text="adyedfadfdaf"
         android:layout_below="@+id/user_title"/>
+    <Button
+        android:id="@+id/post_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Comment"
+        android:layout_below="@+id/userswebsite"
+        android:layout_alignRight="@id/comment_recview"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comment_recview"
