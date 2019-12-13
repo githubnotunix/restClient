@@ -15,7 +15,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//adapter class that helps display the recycler view for all the user comments
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
     private ArrayList<Comment> comments = new ArrayList<>();
@@ -25,6 +25,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         this.comments = comments;
         this.context = context;
     }
+    //method that inflates cardview data
     @NonNull
     @Override
     public CommentAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,15 +35,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CommentAdapter.ViewHolder holder, int position) {
+        //print out the comment data
         holder.commentEmail.setText("Email: " + comments.get(position).getEmail());
         holder.commentName.setText("Name: " + comments.get(position).getName());
         holder.commentBody.setText("Body: " + comments.get(position).getText());
-       // holder.postId.setText(String.valueOf("ID: " + posts.get(position).getId()));
-        // holder.postUserId.setText(String.valueOf("User ID: " + posts.get(position).getUserId()));
-        //holder.postTitle.setText("Title:" + posts.get(position).getTitle());
-        //holder.postBody.setText("Body " + posts.get(position).getText() + "\n");
-
     }
+
+    //function that adds comments based on the index position
     public void addComment(Comment comment){
         comments.add(0, comment);
         notifyItemChanged(0);
@@ -54,28 +53,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         private TextView commentEmail, commentName, commentBody;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            //set all texviews to their correct id
             commentEmail = (TextView) itemView.findViewById(R.id.comment_email);
             commentName = (TextView) itemView.findViewById(R.id.comment_name);
             commentBody = (TextView) itemView.findViewById(R.id.comment_body);
-            /*postUserId = (TextView) itemView.findViewById(R.id.post_userid);
-            postId = (TextView) itemView.findViewById(R.id.post_id);
-            postTitle = (TextView) itemView.findViewById(R.id.post_title);
-            postBody = (TextView) itemView.findViewById(R.id.post_body);*/
-            /*itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context.getApplicationContext(), "Recycler View Clicked", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(v.getContext(), UserActivity.class);
-                    intent.putExtra("userId", posts.get(getAdapterPosition()).getUserId());
-                    intent.putExtra("title", posts.get(getAdapterPosition()).getTitle());
-                    intent.putExtra("body", posts.get(getAdapterPosition()).getText());
-                    v.getContext().startActivity(intent);
-                }
-            });*/
 
         }
     }

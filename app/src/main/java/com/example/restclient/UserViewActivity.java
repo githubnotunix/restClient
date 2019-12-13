@@ -37,7 +37,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UserViewActivity extends FragmentActivity implements OnMapReadyCallback {
     private TextView name, username, email, phone, website, textViewResult;
     private GoogleMap mMap;
-    private String lat, lng;
     ArrayList<Post> posts = new ArrayList<>();
     private UserViewActivityAdapter userViewActivityAdapter;
     private RecyclerView precyclerView;
@@ -45,6 +44,7 @@ public class UserViewActivity extends FragmentActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_view);
+        //code that displays map fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
@@ -55,11 +55,7 @@ public class UserViewActivity extends FragmentActivity implements OnMapReadyCall
         website = (TextView) findViewById(R.id.userswebsite);
         precyclerView = (RecyclerView) findViewById(R.id.user_post_recview);
         precyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
+        //grab info from last activity
         Intent intent = getIntent();
         User user = intent.getParcelableExtra("user");
         name.setText("Name: " + user.getName());
@@ -67,16 +63,13 @@ public class UserViewActivity extends FragmentActivity implements OnMapReadyCall
         email.setText("Email: " + user.getEmail());
         phone.setText("Phone: " + user.getPhone());
         website.setText("Website: " +  user.getWebsite());
-        
+        //call retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://jsonplaceholder.typicode.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-
-        Call<List<Post>> call = jsonPlaceHolderApi.getUserPosts(user.getId());
-
+        Call<List<Post>> call = jsonPlaceHolderApi.getUserPosts(user.getId());//get all posts with userid
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
@@ -85,22 +78,10 @@ public class UserViewActivity extends FragmentActivity implements OnMapReadyCall
                     textViewResult.setText("Code: " + response.code());
                     return;
                 }
-
+                //display post data in rec view
                 posts = new ArrayList<Post>(response.body());
                 userViewActivityAdapter = new UserViewActivityAdapter(UserViewActivity.this, posts);
-
-                //commentAdapter = new CommentAdapter(UserViewActivity.this, comments);
                 precyclerView.setAdapter(userViewActivityAdapter);
-
-                /*for (Post post : posts) {
-                    String content = "";
-                    content += "ID: " + post.getId() + "\n";
-                    content += "User ID: " + post.getUserId() + "\n";
-                    content += "Title: " + post.getTitle() + "\n";
-                    content += "Text: " + post.getText() + "\n\n";
-
-                    textViewResult.append(content);
-                }*/
             }
 
             @Override
@@ -108,34 +89,19 @@ public class UserViewActivity extends FragmentActivity implements OnMapReadyCall
                 textViewResult.setText(t.getMessage());
             }
         });
-
-        //website.setText(user.getAddress().getGeo().getLat());
-
-        /*FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
     }
+    //displays the google api
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //System.out.println("SYDNEY HERE");
-        // Add a marker in Sydney, Australia, and move the camera.
+        //get the user data
         Intent intent = getIntent();
         User user = intent.getParcelableExtra("user");
         String lat = user.getAddress().getGeo().getLat();
         String lng = user.getAddress().getGeo().getLng();
-
-        //LatLng sydney = new LatLng(-34, 151);
-        LatLng sydney = new LatLng(Float.parseFloat(lat), Float.parseFloat(lng));
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //put in the user location and display a marker
+        LatLng userLoc = new LatLng(Float.parseFloat(lat), Float.parseFloat(lng));
+        mMap.addMarker(new MarkerOptions().position(userLoc).title("User Location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(userLoc));
     }
-
-
 }

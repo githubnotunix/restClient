@@ -30,108 +30,57 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserActivity extends AppCompatActivity {
 
-    private TextView username, usertitle, userbody;
+    private TextView userName, userTitle, userBody;
     private TextView textViewResult;
     private RecyclerView crecyclerView;
     private CommentAdapter commentAdapter;
     private Button postButton;
     ArrayList<Comment> comments = new ArrayList<>();
-    //int id_from_post;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        //display rec view layout
         crecyclerView = findViewById(R.id.comment_recview);
         crecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        username = findViewById(R.id.user_name);
+        userName = findViewById(R.id.user_name);
+        //button that creates comment
         postButton = (Button) findViewById(R.id.post_button);
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CreateComment.class);
-                // WIll make this activity listen for a result when the CreateComment class finishes
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, 1);//send the activity while looking at result
             }
         });
-//        username.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-        usertitle = findViewById(R.id.user_title);
-        userbody = findViewById(R.id.user_body);
+        userTitle = findViewById(R.id.user_title);
+        userBody = findViewById(R.id.user_body);
+        //grab info from last activity
         Intent intent = getIntent();
-        int id_from_post = intent.getIntExtra("userId", 0);
+        int idFromPost = intent.getIntExtra("userId", 0);
         String user_title = intent.getStringExtra("title" );
         String user_body = intent.getStringExtra("body");
-        usertitle.setText("Title: " + user_title);
-        userbody.setText("Body: " + user_body);
-        // Get the user data from the intent
-        final User user = intent.getParcelableExtra("user");
-
-        username.setText(user.getUsername());
-        username.setOnClickListener(new View.OnClickListener() {
+        //display the title and body from the previous activity
+        userTitle.setText("Title: " + user_title);
+        userBody.setText("Body: " + user_body);
+        final User user = intent.getParcelableExtra("user");//get the user data for the username
+        userName.setText(user.getUsername());
+        userName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), UserViewActivity.class);
-                intent.putExtra("user", user);
+                intent.putExtra("user", user);//pass user data to the next activity
                 startActivity(intent);
             }
         });
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-
-//        Call<User> call = jsonPlaceHolderApi.getUser(id_from_post);
-
-//        call.enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//
-//                if (!response.isSuccessful()) {
-//                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA AQUI");
-//                    //textViewResult.setText("Code: " + response.code());
-//                    return;
-//                }
-//                //Log.e("USERACTIVITY" );
-//
-//                //user = new User(response.body());
-//                User user = response.body();
-//                username.setText("User Name: " + user.getName());
-//
-//                /*for (Post post : posts) {
-//                    String content = "";
-//                    content += "ID: " + post.getId() + "\n";
-//                    content += "User ID: " + post.getUserId() + "\n";
-//                    content += "Title: " + post.getTitle() + "\n";
-//                    content += "Text: " + post.getText() + "\n\n";
-//
-//                    textViewResult.append(content);
-//                }*/
-//            }
-
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//                textViewResult.setText(t.getMessage());
-//            }
-//        });
+        //call retrofit
         Retrofit retrofitTwo = new Retrofit.Builder()
                 .baseUrl("https://jsonplaceholder.typicode.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         JsonPlaceHolderApi jsonPlaceHolderApiTwo = retrofitTwo.create(JsonPlaceHolderApi.class);
-
-        Call<List<Comment>> callTwo = jsonPlaceHolderApiTwo.getComments(id_from_post);
-
+        Call<List<Comment>> callTwo = jsonPlaceHolderApiTwo.getComments(idFromPost);
         callTwo.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
@@ -140,20 +89,10 @@ public class UserActivity extends AppCompatActivity {
                     textViewResult.setText("Code: " + response.code());
                     return;
                 }
-
+                //get the content of the comments and display it to the rec view
                 comments = new ArrayList<Comment>(response.body());
                 commentAdapter = new CommentAdapter(UserActivity.this, comments);
                 crecyclerView.setAdapter(commentAdapter);
-
-                /*for (Post post : posts) {
-                    String content = "";
-                    content += "ID: " + post.getId() + "\n";
-                    content += "User ID: " + post.getUserId() + "\n";
-                    content += "Title: " + post.getTitle() + "\n";
-                    content += "Text: " + post.getText() + "\n\n";
-
-                    textViewResult.append(content);
-                }*/
             }
 
             @Override
@@ -162,10 +101,9 @@ public class UserActivity extends AppCompatActivity {
             }
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
+        //sees if the result went through correctly
         if (requestCode == 1) {
             Comment comment = data.getParcelableExtra("comment");
             commentAdapter.addComment(comment);

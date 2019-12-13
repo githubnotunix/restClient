@@ -18,7 +18,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView textViewResult, username, userId;
+    private TextView textViewResult, userName, userId;
     ArrayList<Post> posts = new ArrayList<>();
     private PostAdapter postAdapter;
     private RecyclerView recyclerView;
@@ -29,23 +29,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        textViewResult = findViewById(R.id.text_view_result);
         recyclerView = findViewById(R.id.post_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        username = findViewById(R.id.username);
-
+        userName = findViewById(R.id.username);
+        //call retrofit
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://jsonplaceholder.typicode.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-
+        //use retrofit to call all the posts
         Call<List<Post>> call = jsonPlaceHolderApi.getPosts();
-
-
-        // Get all the posts
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
@@ -53,83 +47,30 @@ public class MainActivity extends AppCompatActivity {
                     textViewResult.setText("Code: " + response.code());
                     return;
                 }
-
-                posts = new ArrayList<Post>(response.body());
-
-                // For each post, get the associated user
+                posts = new ArrayList<Post>(response.body());//gets all the post info
+                //get the user for each post
                 for (int i = 0; i < posts.size(); i++) {
                     fetchUser(i, posts.get(i).getUserId());
                 }
-
-
                 postAdapter = new PostAdapter(MainActivity.this, posts);
-                recyclerView.setAdapter(postAdapter);
-
-                /*for (Post post : posts) {
-                    String content A= "";
-                    content += "ID: " + post.getId() + "\n";
-                    content += "User ID: " + post.getUserId() + "\n";
-                    content += "Title: " + post.getTitle() + "\n";
-                    content += "Text: " + post.getText() + "\n\n";
-
-                    textViewResult.append(content);
-                }*/
+                recyclerView.setAdapter(postAdapter);//displays post of rec view
             }
-
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
                 textViewResult.setText(t.getMessage());
             }
         });
-
-//        Post post = new Post();
-//        Call<User> callTwo = jsonPlaceHolderApi.getUser(post.getId());
-//
-//        callTwo.enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//
-//                if (!response.isSuccessful()) {
-//                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA AQUI");
-//                    //textViewResult.setText("Code: " + response.code());
-//                    return;
-//                }
-//                //Log.e("USERACTIVITY" );
-//
-//                //user = new User(response.body());
-//                User user = response.body();
-//                username.setText("User Name: " + user.getName());
-//
-//                /*for (Post post : posts) {
-//                    String content = "";
-//                    content += "ID: " + post.getId() + "\n";
-//                    content += "User ID: " + post.getUserId() + "\n";
-//                    content += "Title: " + post.getTitle() + "\n";
-//                    content += "Text: " + post.getText() + "\n\n";
-//
-//                    textViewResult.append(content);
-//                }*/
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//                textViewResult.setText(t.getMessage());
-//            }
-//        });
     }
-
+    //fumction to call user by usering the user id
     public void fetchUser(final int position, int userId) {
         Call<User> call = jsonPlaceHolderApi.getUser(userId);
-
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                User user = response.body();
-
-                posts.get(position).setUser(user);
-                postAdapter.updateBlogPost(position, posts.get(position));
+                User user = response.body();//get all user information
+                posts.get(position).setUser(user);//get the post based off userid
+                postAdapter.updatePost(position, posts.get(position));//display the blog posts
             }
-
             @Override
             public void onFailure(Call<User> call, Throwable t) {
 

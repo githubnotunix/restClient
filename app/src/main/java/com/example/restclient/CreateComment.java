@@ -31,22 +31,22 @@ public class CreateComment extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_comment);
+        //set ids equal to each other
         eEmail = (EditText)findViewById(R.id.commentemail);
         eName = (EditText)findViewById(R.id.commentname);
         eBody = (EditText) findViewById(R.id.commentbody);
+        //button that adds a new comment to the user comments
         add_button= (Button) findViewById(R.id.add_comment_button);
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), UserViewActivity.class);
-//                startActivity(intent);
-//                finish();
+                //call retrofit
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("https://jsonplaceholder.typicode.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-
+                //retrofit will then get the information below
                 Call<Comment> call = jsonPlaceHolderApi.createComments(
                         1,
                         eEmail.getText().toString(),
@@ -61,21 +61,13 @@ public class CreateComment extends AppCompatActivity {
                             textViewResult.setText("Code: " + response.code());
                             return;
                         }
-
+                        //get everything inside the comment object
                         Comment comment = response.body();
                         Intent intent = new Intent();
                         intent.putExtra("comment", comment);
+                        //set the result to okay to see how it passes through
                         setResult(Activity.RESULT_OK, intent);
-                        finish();
-                /*for (Post post : posts) {
-                    String content = "";
-                    content += "ID: " + post.getId() + "\n";
-                    content += "User ID: " + post.getUserId() + "\n";
-                    content += "Title: " + post.getTitle() + "\n";
-                    content += "Text: " + post.getText() + "\n\n";
-
-                    textViewResult.append(content);
-                }*/
+                        finish();//finish the activity because we are done with this page
                     }
                     @Override
                     public void onFailure(Call<Comment> call, Throwable t) {
@@ -84,17 +76,6 @@ public class CreateComment extends AppCompatActivity {
                 });
             }
         });
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
-        /*FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
     }
 
 }
