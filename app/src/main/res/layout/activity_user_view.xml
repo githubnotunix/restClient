@@ -36,12 +36,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/usersphone"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/user_post_recview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/userswebsite" />
     <fragment
-        android:id="@+id/map_fragemnt"
+        android:id="@+id/map_fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/userswebsite"/>
+        android:layout_below="@+id/user_post_recview"/>
 
     <!--<com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
